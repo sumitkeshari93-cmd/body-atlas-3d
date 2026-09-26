@@ -1,0 +1,8 @@
+.godot/
+.import/
+*.translation
+export/*.apk
+export/*.aab
+*.mono
+.DS_Store
+android/

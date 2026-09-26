@@ -1,0 +1,315 @@
+[gd_scene load_steps=12 format=3 uid="uid://bodyatlas3dmain"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/orbit_camera.gd" id="2_orbit"]
+[ext_resource type="Script" path="res://scripts/body_controller.gd" id="3_body"]
+[ext_resource type="Script" path="res://scripts/skin_shell.gd" id="4_skin"]
+[ext_resource type="Script" path="res://scripts/procedural_organs.gd" id="5_organs"]
+[ext_resource type="Script" path="res://scripts/catalog.gd" id="6_catalog"]
+[ext_resource type="Script" path="res://scripts/ui_hud.gd" id="7_ui"]
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 1
+background_color = Color(0.05, 0.07, 0.1, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.55, 0.6, 0.7, 1)
+ambient_light_energy = 0.85
+tonemap_mode = 2
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.08, 0.1, 0.14, 0.92)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 12
+content_margin_top = 10
+content_margin_right = 12
+content_margin_bottom = 10
+
+[sub_resource type="StyleBoxFlat" id="Style_bar"]
+bg_color = Color(0.06, 0.08, 0.12, 0.88)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="LabelSettings" id="Label_title"]
+font_size = 20
+font_color = Color(0.95, 0.96, 0.98, 1)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.82, -0.4, 0.4, 0, 0.71, 0.71, -0.57, -0.58, 0.58, 2, 4, 3)
+light_energy = 1.15
+shadow_enabled = false
+
+[node name="Fill" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.7, -0.2, -0.68, 0, 0.96, -0.28, 0.71, -0.2, -0.68, -2, 2, -2)
+light_energy = 0.45
+light_color = Color(0.7, 0.8, 1, 1)
+shadow_enabled = false
+
+[node name="OrbitRig" type="Node3D" parent="."]
+script = ExtResource("2_orbit")
+
+[node name="Camera3D" type="Camera3D" parent="OrbitRig"]
+current = true
+fov = 42.0
+near = 0.05
+far = 80.0
+
+[node name="Body" type="Node3D" parent="."]
+script = ExtResource("3_body")
+
+[node name="ModelHost" type="Node3D" parent="Body"]
+
+[node name="SkinShell" type="Node3D" parent="Body"]
+script = ExtResource("4_skin")
+
+[node name="Organs" type="Node3D" parent="Body"]
+script = ExtResource("5_organs")
+
+[node name="Catalog" type="Node" parent="."]
+script = ExtResource("6_catalog")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("7_ui")
+
+[node name="Root" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="UI/Root"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("Style_bar")
+
+[node name="VBox" type="VBoxContainer" parent="UI/Root/TopBar"]
+layout_mode = 2
+
+[node name="TitleRow" type="HBoxContainer" parent="UI/Root/TopBar/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/Root/TopBar/VBox/TitleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Body Atlas 3D"
+label_settings = SubResource("Label_title")
+
+[node name="CreditsBtn" type="Button" parent="UI/Root/TopBar/VBox/TitleRow"]
+layout_mode = 2
+text = "Credits"
+
+[node name="LayerBar" type="HBoxContainer" parent="UI/Root/TopBar/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BottomBar" type="PanelContainer" parent="UI/Root"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -118.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("Style_bar")
+
+[node name="VBox" type="VBoxContainer" parent="UI/Root/BottomBar"]
+layout_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="UI/Root/BottomBar/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FocusHeart" type="Button" parent="UI/Root/BottomBar/VBox/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Focus Heart"
+
+[node name="GoInside" type="Button" parent="UI/Root/BottomBar/VBox/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Go Inside"
+
+[node name="Overview" type="Button" parent="UI/Root/BottomBar/VBox/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Overview"
+
+[node name="Hotspots" type="HBoxContainer" parent="UI/Root/BottomBar/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Brain" type="Button" parent="UI/Root/BottomBar/VBox/Hotspots"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Brain"
+
+[node name="Lungs" type="Button" parent="UI/Root/BottomBar/VBox/Hotspots"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Lungs"
+
+[node name="Heart" type="Button" parent="UI/Root/BottomBar/VBox/Hotspots"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Heart"
+
+[node name="Digestion" type="Button" parent="UI/Root/BottomBar/VBox/Hotspots"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Digestion"
+
+[node name="Kidney" type="Button" parent="UI/Root/BottomBar/VBox/Hotspots"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Kidney"
+
+[node name="InfoPanel" type="PanelContainer" parent="UI/Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -360.0
+offset_top = -340.0
+offset_right = -16.0
+offset_bottom = -130.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Margin" type="MarginContainer" parent="UI/Root/InfoPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBox" type="VBoxContainer" parent="UI/Root/InfoPanel/Margin"]
+layout_mode = 2
+
+[node name="CommonName" type="Label" parent="UI/Root/InfoPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Name"
+
+[node name="AnatName" type="Label" parent="UI/Root/InfoPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Anatomical"
+
+[node name="Note" type="Label" parent="UI/Root/InfoPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Note"
+autowrap_mode = 3
+
+[node name="CloseInfo" type="Button" parent="UI/Root/InfoPanel/Margin/VBox"]
+layout_mode = 2
+text = "Close"
+
+[node name="Status" type="Label" parent="UI/Root"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 108.0
+offset_right = -16.0
+offset_bottom = 136.0
+theme_override_colors/font_color = Color(0.75, 0.8, 0.88, 1)
+theme_override_font_sizes/font_size = 13
+text = ""
+autowrap_mode = 3
+
+[node name="Credits" type="PanelContainer" parent="UI/Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -220.0
+offset_right = 280.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Margin" type="MarginContainer" parent="UI/Root/Credits"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/Root/Credits/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CreditsTitle" type="Label" parent="UI/Root/Credits/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Credits & Attribution"
+
+[node name="CreditsBody" type="Label" parent="UI/Root/Credits/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "3D body model: Z-Anatomy (CC BY-SA 4.0), simplified & packaged as body.glb by Dare-MSA / hpfrei body-anatomy-3d-viewer (CC BY-SA 4.0).
+
+Original data lineage includes BodyParts3D (CC BY-SA 2.1 JP).
+
+Heart chambers & organ proxies: procedural meshes created for this app (educational, not a clinical scan).
+
+Skin shell: stylized procedural capsule mesh for peel UX.
+
+App: Body Atlas 3D — student anatomy explorer."
+autowrap_mode = 3
+
+[node name="CloseCredits" type="Button" parent="UI/Root/Credits/Margin/VBox"]
+layout_mode = 2
+text = "Close"
+
+[node name="Loading" type="ColorRect" parent="UI/Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.05, 0.08, 0.92)
+
+[node name="LoadingLabel" type="Label" parent="UI/Root/Loading"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -20.0
+offset_right = 200.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 20
+text = "Loading 3D anatomy…"
+horizontal_alignment = 1

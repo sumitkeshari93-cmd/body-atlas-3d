@@ -1,0 +1,36 @@
+; Body Atlas 3D — Godot 4.4.1 mobile anatomy viewer
+config_version=5
+
+[application]
+
+config/name="Body Atlas 3D"
+config/description="Interactive 3D human anatomy atlas — peel layers, tap structures, focus the heart."
+config/version="1.0.0"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/handheld/orientation=1
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=1
+
+[layer_names]
+
+3d_physics/layer_1="anatomy"
